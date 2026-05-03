@@ -6,7 +6,6 @@ import math
 target = [10.0,5.0]
 position = [0.0,0.0]
 velocity = [0.0,0.0]
-target_velocity = [0.0,0.0]
 
 kp_pos = 2.5
 kp_vel = 2.5
@@ -31,15 +30,16 @@ filtered_dy = 0
 alpha = 0.65
 
 delay_steps = 20
-position_buffer = deque([[0.0, 0.0]]*delay_steps, maxlen=delay_steps)
+position_list = deque([[0.0, 0.0]], maxlen=delay_steps)
 
 delay_time = delay_steps * dt
 
-actutator_delay_steps = 10
-output_buffer = deque([[0.0,0.0]]*actutator_delay_steps, maxlen=actutator_delay_steps)
+actutator_delay_steps = 10 
+output_list = deque([[0.0,0.0]], maxlen=actutator_delay_steps)
 
 for i in range(1000):
-    delayed_position = position_buffer[0]
+    prev_position = position_list[0]
+    delayed_position = prev_position * delay_steps
     noise_x = random.uniform(-0.07, 0.07)
     noise_y = random.uniform(-0.07, 0.07)
     measured_position = [delayed_position[0] + noise_x, delayed_position[1] + noise_y]
@@ -123,7 +123,7 @@ for i in range(1000):
     prev_error = velocity_error.copy()
 
 
-    delayed_output = output_buffer[0]
+    delayed_output = output_list[0] *actutator_delay_steps
 
     velocity[0] += delayed_output[0] * dt
     velocity[1] += delayed_output[1] * dt
@@ -145,8 +145,8 @@ for i in range(1000):
     position[1] += velocity[1] * dt
 
 
-    position_buffer.append(position.copy())
-    output_buffer.append(output.copy())
+    position_list.append(position.copy())
+    output_list.append(output.copy())
 
     print(position)
 
