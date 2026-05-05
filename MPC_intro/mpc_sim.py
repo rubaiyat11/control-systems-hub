@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import numpy as np
-from itertools import product
 
 
 dt = 0.1
@@ -26,10 +25,10 @@ Q = np.diag([20, 20, 5, 5])
 R = np.diag([0.2, 0.2])
 Rd = np.diag([0.5, 0.5])
 
-N = 5
+N = 12
 D = 0.95
 
-num_samples = 300
+num_samples = 500
 
 mean_sequence = [np.zeros(2) for _ in range(N)]
 
@@ -106,10 +105,8 @@ def compute_gradient(u_sequence):
 
 for step in range(100):
 
-    # initial guess
     u_sequence = np.zeros((N, 2))
 
-    # gradient descent iterations
     for _ in range(10):
         grad = compute_gradient(u_sequence)
 
